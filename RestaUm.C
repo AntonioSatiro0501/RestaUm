@@ -123,7 +123,7 @@ bool valida(int direcao, char matriz[TAM][TAM], int posicao){
 void resolve(char matriz[TAM][TAM],char solucao[31][TAM][TAM], int jogada, char resposta[TAM][TAM]){
     
     //caso estejamos na jogada 31 e o estado atual do tabuleiro for coerente com a respota, fazemos o print do caminho das solucoes
-    if(jogada == 31 && verificaResultado(matriz, resposta)){
+    if(verificaResultado(matriz, resposta)){
         printf("\nSolucao\n");
         for(int i = 0; i < 31; i++){
             for(int j = 0; j < 9; j++){
@@ -135,7 +135,7 @@ void resolve(char matriz[TAM][TAM],char solucao[31][TAM][TAM], int jogada, char 
         }
         exit(0);
     }
-    else if(jogada == 31){
+    else if(jogada == 32){
         return;
     }
     
