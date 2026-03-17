@@ -3,14 +3,14 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define TAM 9
-#define P 'o'
+// Copia uma matriz no terminal
+void printMatriz(char matriz[9][9])
+{
 
-//Copia uma matriz no terminal
-void printMatriz(char matriz[TAM][TAM]){
-
-    for(int i =0; i < TAM; i++){
-        for(int j = 0; j < TAM; j++){
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
             printf("%c", matriz[i][j]);
         }
         printf("\n");
@@ -18,11 +18,15 @@ void printMatriz(char matriz[TAM][TAM]){
     printf("\n");
 }
 
-//Verifica se o estado atual do jogo é a resposta
-bool verificaResultado(char matriz[TAM][TAM], char resposta[TAM][TAM]){
-    for(int i =0; i < TAM; i++){
-        for(int j = 0; j< TAM; j++){
-            if(matriz[i][j] != resposta[i][j]){
+// Verifica se o estado atual do jogo é a resposta
+bool verificaResultado(char matriz[9][9], char resposta[9][9])
+{
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            if (matriz[i][j] != resposta[i][j])
+            {
                 return false;
             }
         }
@@ -30,36 +34,51 @@ bool verificaResultado(char matriz[TAM][TAM], char resposta[TAM][TAM]){
     return true;
 }
 
-//verifica se a jogada é ou não permitida
-bool validaDirecao(int direcao, char matriz[TAM][TAM], int linha, int coluna){
+// verifica se a jogada é ou não permitida
+bool validaDirecao(int direcao, char matriz[9][9], int linha, int coluna)
+{
 
-    if(direcao == 0){ //jogada de peca vindo de cima para baixo
-        if(linha - 2 >= 0){
-            if(matriz[linha - 1][coluna] == P && matriz[linha - 2][coluna] == P){
+    if (direcao == 0)
+    { // jogada de peca vindo de cima para baixo
+        if (linha - 2 >= 0)
+        {
+            if (matriz[linha - 1][coluna] == 'o' && matriz[linha - 2][coluna] == ' ')
+            {
                 return true;
             }
         }
         return false;
     }
-    if(direcao == 1){ //jogada de peca vindo de baixo para cima
-        if(linha + 2 <= 8){
-            if(matriz[linha + 1][coluna] == P && matriz[linha + 2][coluna] == P){
+    if (direcao == 1)
+    { // jogada de peca vindo da direita pra esquerda
+        if (coluna + 2 <= 8)
+        {
+            if (matriz[linha][coluna + 1] == 'o' && matriz[linha][coluna + 2] == ' ')
+            {
                 return true;
             }
         }
         return false;
     }
-    if(direcao == 2){ //jogada de peca vindo da esqueda pra direita
-        if(coluna - 2 >= 0){
-            if(matriz[linha][coluna - 1] == P && matriz[linha][coluna - 2] == P){
+
+    if (direcao == 2)
+    { // jogada de peca vindo de baixo para cima
+        if (linha + 2 <= 8)
+        {
+            if (matriz[linha + 1][coluna] == 'o' && matriz[linha + 2][coluna] == ' ')
+            {
                 return true;
             }
         }
         return false;
     }
-    if(direcao == 3){ //jogada de peca vindo da direita pra esquerda
-        if(coluna + 2 <= 8){
-            if(matriz[linha][coluna + 1] == P && matriz[linha][coluna + 2] == P){
+
+    if (direcao == 3)
+    { // jogada de peca vindo da esqueda pra direita
+        if (coluna - 2 >= 0)
+        {
+            if (matriz[linha][coluna - 1] == 'o' && matriz[linha][coluna - 2] == ' ')
+            {
                 return true;
             }
         }
@@ -69,117 +88,140 @@ bool validaDirecao(int direcao, char matriz[TAM][TAM], int linha, int coluna){
     return false;
 }
 
-//altera o estado do tabuleiro baseado na direcao da jogada
-void fazJogada(int direcao,char matriz[TAM][TAM], int linha,int coluna){
+// altera o estado do tabuleiro baseado na direcao da jogada
+void fazJogada(int direcao, char matriz[9][9], int linha, int coluna)
+{
 
-    if(direcao == 0){ 
-        matriz[linha][coluna] = P;
-        matriz[linha - 1][coluna] = ' '; 
-        matriz[linha - 2][coluna] = ' ';
+    if (direcao == 0)
+    {
+        matriz[linha][coluna] = ' ';
+        matriz[linha - 1][coluna] = ' ';
+        matriz[linha - 2][coluna] = 'o';
         return;
     }
-    if(direcao == 1){
-        matriz[linha][coluna] = P;
-        matriz[linha + 1][coluna] = ' '; 
-        matriz[linha + 2][coluna] = ' ';
+    if (direcao == 1)
+    {
+        matriz[linha][coluna] = ' ';
+        matriz[linha][coluna + 1] = ' ';
+        matriz[linha][coluna + 2] = 'o';
         return;
     }
-    if(direcao == 2){
-        matriz[linha][coluna] = P;
+    if (direcao == 2)
+    {
+
+        matriz[linha][coluna] = ' ';
+        matriz[linha + 1][coluna] = ' ';
+        matriz[linha + 2][coluna] = 'o';
+        return;
+    }
+    if (direcao == 3)
+    {
+        matriz[linha][coluna] = ' ';
         matriz[linha][coluna - 1] = ' ';
-        matriz[linha][coluna - 2] = ' ';
+        matriz[linha][coluna - 2] = 'o';
         return;
     }
-    if(direcao == 3){
-        matriz[linha][coluna] = P;
-        matriz[linha][coluna + 1] = ' '; 
-        matriz[linha][coluna + 2] = ' ';
-        return;
-    }
-
 }
 
-//Valida se a posicao atual é um espaço vazio e se a jogada é válida
-bool valida(int direcao, char matriz[TAM][TAM], int posicao){
+// Valida se a posicao atual é um espaço vazio e se a jogada é válida
+bool valida(int direcao, char matriz[9][9], int posicao)
+{
 
-    int linha = posicao/9;
-    int coluna = posicao%9;
+    int linha = posicao / 9;
+    int coluna = posicao % 9;
 
-    //O programa procura pelos espacos vazios para a realizacao de jogadas
-    if(matriz[linha][coluna] != ' '){
+    // O programa procura pelos espacos vazios para a realizacao de jogadas
+    if (matriz[linha][coluna] != 'o')
+    {
         return false;
     }
 
-    if(validaDirecao(direcao,matriz,linha,coluna)){
-        fazJogada(direcao, matriz, linha, coluna);
-        printMatriz(matriz);
+    if (validaDirecao(direcao, matriz, linha, coluna))
+    {
         return true;
     }
 
     return false;
 }
 
-//funcao recursiva para resolucao do jogo
-void resolve(char matriz[TAM][TAM],char solucao[31][TAM][TAM], int jogada, char resposta[TAM][TAM]){
-    
-    //caso estejamos na jogada 31 e o estado atual do tabuleiro for coerente com a respota, fazemos o print do caminho das solucoes
-    if(verificaResultado(matriz, resposta)){
+// funcao recursiva para resolucao do jogo
+void resolve(char matriz[9][9], char solucao[32][9][9], int jogada, char resposta[9][9])
+{
+    char backtrack[9][9];
+
+    // caso estejamos na jogada 31 e o estado atual do tabuleiro for coerente com a respota, fazemos o print do caminho das solucoes
+    if (jogada == 31 && verificaResultado(matriz, resposta))
+    {
+
+        memcpy(solucao[jogada], matriz, sizeof(backtrack));
+
         printf("\nSolucao\n");
-        for(int i = 0; i < 31; i++){
-            for(int j = 0; j < 9; j++){
-                for(int k =0; k < 9; k++){
+        for (int i = 0; i < 32; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                for (int k = 0; k < 9; k++)
+                {
                     printf("%c", solucao[i][j][k]);
                 }
                 printf("\n");
             }
+            printf("\n");
         }
         exit(0);
     }
-    else if(jogada == 32){
+    else if (jogada == 31)
+    {
         return;
     }
-    
-    for(int i = 0; i < 81; i++){
-        for(int d = 0;d < 4; d++){
-            if(valida(d,matriz,i)){
-                for(int j = 0; j < 9; j++){
-                    for(int k =0; k < 9; k++){
-                        solucao[jogada][j][k] = matriz[j][k];
-                    }
-                }
-                resolve(matriz,solucao,jogada + 1,resposta);
 
-                for(int j = 0; j < 9; j++){
-                    for(int k =0; k < 9; k++){
-                        matriz[j][k] = solucao[jogada][j][k];
-                    }
-                }
+    
+    memcpy(backtrack, matriz, sizeof(backtrack));
+    memcpy(solucao[jogada], matriz, sizeof(backtrack));
+
+    for (int i = 0; i < 81; i++)
+    {
+        if (matriz[i / 9][i % 9] != 'o')
+        {
+            continue;
+        }
+
+        for (int d = 0; d < 4; d++)
+        {
+            if (valida(d, matriz, i))
+            {
+
+                fazJogada(d, matriz, i / 9, i % 9);
+                resolve(matriz, solucao, jogada + 1, resposta);
+
+                memcpy(matriz, backtrack, sizeof(backtrack));
             }
         }
     }
 }
 
-int main(){
-    char solucao[31][TAM][TAM];
-    char matriz[TAM][TAM] = {{'#','#','#','#','#','#','#','#','#'},
-                             {'#','#','#','o','o','o','#','#','#'},
-                             {'#','#','#','o','o','o','#','#','#'},
-                             {'#','o','o','o','o','o','o','o','#'},
-                             {'#','o','o','o',' ','o','o','o','#'},
-                             {'#','o','o','o','o','o','o','o','#'},
-                             {'#','#','#','o','o','o','#','#','#'},
-                             {'#','#','#','o','o','o','#','#','#'},
-                             {'#','#','#','#','#','#','#','#','#'}};
+int main()
+{
+    char solucao[32][9][9];
+    char matriz[9][9] = {{'#', '#', '#', '#', '#', '#', '#', '#', '#'},
+                         {'#', '#', '#', 'o', 'o', 'o', '#', '#', '#'},
+                         {'#', '#', '#', 'o', 'o', 'o', '#', '#', '#'},
+                         {'#', 'o', 'o', 'o', 'o', 'o', 'o', 'o', '#'},
+                         {'#', 'o', 'o', 'o', ' ', 'o', 'o', 'o', '#'},
+                         {'#', 'o', 'o', 'o', 'o', 'o', 'o', 'o', '#'},
+                         {'#', '#', '#', 'o', 'o', 'o', '#', '#', '#'},
+                         {'#', '#', '#', 'o', 'o', 'o', '#', '#', '#'},
+                         {'#', '#', '#', '#', '#', '#', '#', '#', '#'}};
 
-    char resposta[TAM][TAM] ={{'#','#','#','#','#','#','#','#','#'},
-                             {'#','#','#',' ',' ',' ','#','#','#'},
-                             {'#','#','#',' ',' ',' ','#','#','#'},
-                             {'#',' ',' ',' ',' ',' ',' ',' ','#'},
-                             {'#',' ',' ',' ','o',' ',' ',' ','#'},
-                             {'#',' ',' ',' ',' ',' ',' ',' ','#'},
-                             {'#','#','#',' ',' ',' ','#','#','#'},
-                             {'#','#','#',' ',' ',' ','#','#','#'},
-                             {'#','#','#','#','#','#','#','#','#'}};
+    char resposta[9][9] = {{'#', '#', '#', '#', '#', '#', '#', '#', '#'},
+                           {'#', '#', '#', ' ', ' ', ' ', '#', '#', '#'},
+                           {'#', '#', '#', ' ', ' ', ' ', '#', '#', '#'},
+                           {'#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
+                           {'#', ' ', ' ', ' ', 'o', ' ', ' ', ' ', '#'},
+                           {'#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
+                           {'#', '#', '#', ' ', ' ', ' ', '#', '#', '#'},
+                           {'#', '#', '#', ' ', ' ', ' ', '#', '#', '#'},
+                           {'#', '#', '#', '#', '#', '#', '#', '#', '#'}};
 
-    resolve(matriz,solucao,0,resposta);
+    resolve(matriz, solucao, 0, resposta);
 }
