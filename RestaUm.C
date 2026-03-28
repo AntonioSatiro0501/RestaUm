@@ -3,6 +3,27 @@
 #include <string.h>
 #include <stdbool.h>
 
+void escreveArquivo(char solucao[32][9][9]){
+
+    FILE *file = fopen("Resultados.txt", "w");
+
+    fprintf(file, "\nSolucao\n");
+        for (int i = 0; i < 32; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                for (int k = 0; k < 9; k++)
+                {
+                    fprintf(file,"%c", solucao[i][j][k]);
+                }
+                fprintf(file, "\n");
+            }
+            fprintf(file, "\n");
+        }
+    
+    fclose(file);
+}
+
 // Copia uma matriz no terminal
 void printMatriz(char matriz[9][9])
 {
@@ -123,7 +144,7 @@ void fazJogada(int direcao, char matriz[9][9], int linha, int coluna)
     }
 }
 
-// Valida se a posicao atual é um espaço vazio e se a jogada é válida
+// Valida se a posicao atual é um espaço com pino e se a jogada é válida
 bool valida(int direcao, char matriz[9][9], int posicao)
 {
 
@@ -168,6 +189,7 @@ void resolve(char matriz[9][9], char solucao[32][9][9], int jogada, char respost
             }
             printf("\n");
         }
+        escreveArquivo(solucao);
         exit(0);
     }
     else if (jogada == 31)
