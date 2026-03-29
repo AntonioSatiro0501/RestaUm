@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+//escreve o Arquivo txt de resultados
 void escreveArquivo(char solucao[32][9][9]){
 
     FILE *file = fopen("Resultados.txt", "w");
@@ -40,19 +41,12 @@ void printMatriz(char matriz[9][9])
 }
 
 // Verifica se o estado atual do jogo é a resposta
-bool verificaResultado(char matriz[9][9], char resposta[9][9])
+bool verificaResultado(char matriz[9][9])
 {
-    for (int i = 0; i < 9; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            if (matriz[i][j] != resposta[i][j])
-            {
-                return false;
-            }
-        }
+    if ( matriz[4][4] == 'o'){
+        return true;
     }
-    return true;
+    return false;
 }
 
 // verifica se a jogada é ou não permitida
@@ -166,12 +160,12 @@ bool valida(int direcao, char matriz[9][9], int posicao)
 }
 
 // funcao recursiva para resolucao do jogo
-void resolve(char matriz[9][9], char solucao[32][9][9], int jogada, char resposta[9][9])
+void resolve(char matriz[9][9], char solucao[32][9][9], int jogada)
 {
     char backtrack[9][9];
 
     // caso estejamos na jogada 31 e o estado atual do tabuleiro for coerente com a respota, fazemos o print do caminho das solucoes
-    if (jogada == 31 && verificaResultado(matriz, resposta))
+    if (jogada == 31 && verificaResultado(matriz))
     {
 
         memcpy(solucao[jogada], matriz, sizeof(backtrack));
@@ -214,7 +208,7 @@ void resolve(char matriz[9][9], char solucao[32][9][9], int jogada, char respost
             {
 
                 fazJogada(d, matriz, i / 9, i % 9);
-                resolve(matriz, solucao, jogada + 1, resposta);
+                resolve(matriz, solucao, jogada + 1);
 
                 memcpy(matriz, backtrack, sizeof(backtrack));
             }
@@ -235,15 +229,6 @@ int main()
                          {'#', '#', '#', 'o', 'o', 'o', '#', '#', '#'},
                          {'#', '#', '#', '#', '#', '#', '#', '#', '#'}};
 
-    char resposta[9][9] = {{'#', '#', '#', '#', '#', '#', '#', '#', '#'},
-                           {'#', '#', '#', ' ', ' ', ' ', '#', '#', '#'},
-                           {'#', '#', '#', ' ', ' ', ' ', '#', '#', '#'},
-                           {'#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
-                           {'#', ' ', ' ', ' ', 'o', ' ', ' ', ' ', '#'},
-                           {'#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
-                           {'#', '#', '#', ' ', ' ', ' ', '#', '#', '#'},
-                           {'#', '#', '#', ' ', ' ', ' ', '#', '#', '#'},
-                           {'#', '#', '#', '#', '#', '#', '#', '#', '#'}};
 
-    resolve(matriz, solucao, 0, resposta);
+    resolve(matriz, solucao, 0);
 }
