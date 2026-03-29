@@ -3,25 +3,58 @@
 #include <string.h>
 #include <stdbool.h>
 
-//escreve o Arquivo txt de resultados
-void escreveArquivo(char solucao[32][9][9]){
+// ANTÔNIO COSTA SATIRO DE SOUZA 10723636
+// RAFAEL MOUTINHO TESSAROTTO 10395682
+// MIHAEL ROMMEL BARBOSA XAVIER 10239617
+
+//extrai o tabuleiro de Tabuleiro.txt
+void extraiTabuleiro(char matriz[9][9]){
+
+    FILE *tabuleiro = fopen("Tabuleiro.txt", "r");
+
+    if (tabuleiro == NULL)
+    {
+        printf("Erro ao abrir arquivo do tabuleiro");
+        exit(1);
+    }
+
+    // Extração do tabuleiro
+    for (int i = 0; i < 9; i++)
+    {
+
+        char buffer[11];
+        if (fgets(buffer, sizeof(buffer), tabuleiro) != NULL)
+        {
+
+            for (int j = 0; j < 9; j++)
+            {
+
+                matriz[i][j] = buffer[j];
+            }
+        }
+    }
+}
+
+// escreve o Arquivo txt de resultados
+void escreveArquivo(char solucao[32][9][9])
+{
 
     FILE *file = fopen("Resultados.txt", "w");
 
     fprintf(file, "\nSolucao\n");
-        for (int i = 0; i < 32; i++)
+    for (int i = 0; i < 32; i++)
+    {
+        for (int j = 0; j < 9; j++)
         {
-            for (int j = 0; j < 9; j++)
+            for (int k = 0; k < 9; k++)
             {
-                for (int k = 0; k < 9; k++)
-                {
-                    fprintf(file,"%c", solucao[i][j][k]);
-                }
-                fprintf(file, "\n");
+                fprintf(file, "%c", solucao[i][j][k]);
             }
             fprintf(file, "\n");
         }
-    
+        fprintf(file, "\n");
+    }
+
     fclose(file);
 }
 
@@ -43,7 +76,8 @@ void printMatriz(char matriz[9][9])
 // Verifica se o estado atual do jogo é a resposta
 bool verificaResultado(char matriz[9][9])
 {
-    if ( matriz[4][4] == 'o'){
+    if (matriz[4][4] == 'o')
+    {
         return true;
     }
     return false;
@@ -188,21 +222,22 @@ void resolve(char matriz[9][9], char solucao[32][9][9], int jogada)
     }
     else if (jogada == 31)
     {
+        printf("Solução não encontrada, retornando para a penultma jogada\n");
         return;
     }
 
-    
+    // prepara matriz para backtrack e armazena o tabuleiro atual em solucao
     memcpy(backtrack, matriz, sizeof(backtrack));
     memcpy(solucao[jogada], matriz, sizeof(backtrack));
 
-    for (int i = 0; i < 81; i++)
+    for (int i = 0; i < 81; i++) // passa pelas 81 posicoes do tabuleiro
     {
         if (matriz[i / 9][i % 9] != 'o')
         {
             continue;
         }
 
-        for (int d = 0; d < 4; d++)
+        for (int d = 0; d < 4; d++) // passa pelas 4 direcoes possiveis de jogada
         {
             if (valida(d, matriz, i))
             {
@@ -218,17 +253,9 @@ void resolve(char matriz[9][9], char solucao[32][9][9], int jogada)
 
 int main()
 {
+    char matriz[9][9];
+    extraiTabuleiro(matriz);
+
     char solucao[32][9][9];
-    char matriz[9][9] = {{'#', '#', '#', '#', '#', '#', '#', '#', '#'},
-                         {'#', '#', '#', 'o', 'o', 'o', '#', '#', '#'},
-                         {'#', '#', '#', 'o', 'o', 'o', '#', '#', '#'},
-                         {'#', 'o', 'o', 'o', 'o', 'o', 'o', 'o', '#'},
-                         {'#', 'o', 'o', 'o', ' ', 'o', 'o', 'o', '#'},
-                         {'#', 'o', 'o', 'o', 'o', 'o', 'o', 'o', '#'},
-                         {'#', '#', '#', 'o', 'o', 'o', '#', '#', '#'},
-                         {'#', '#', '#', 'o', 'o', 'o', '#', '#', '#'},
-                         {'#', '#', '#', '#', '#', '#', '#', '#', '#'}};
-
-
     resolve(matriz, solucao, 0);
 }
