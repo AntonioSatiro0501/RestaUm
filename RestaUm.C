@@ -4,8 +4,8 @@
 #include <stdbool.h>
 
 // ANTÔNIO COSTA SATIRO DE SOUZA 10723636
-// RAFAEL MOUTINHO TESSAROTTO 10395682
-// MIHAEL ROMMEL BARBOSA XAVIER 10239617
+//RAFAEL MOUTINHO TESSAROTTO 10395682
+//MIHAEL ROMMEL BARBOSA XAVIER 10239617
 
 //extrai o tabuleiro de Tabuleiro.txt
 void extraiTabuleiro(char matriz[9][9]){
@@ -255,6 +255,8 @@ int main()
 {
     char matriz[9][9];
     extraiTabuleiro(matriz);
+
+    printf("Iniciando backtracking\n");
 
     char solucao[32][9][9];
     resolve(matriz, solucao, 0);
